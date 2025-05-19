@@ -2,49 +2,53 @@ version: "3.8"
 
 services:
   db:
-    image: postgres:15
-    restart: always
+    image: cansinerdi/stock-db:latest
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: stockdb
     volumes:
-      - ./supabase/migrations:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432"
+      - db_data:/var/lib/postgresql/data
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d stockdb"]
       interval: 10s
       timeout: 5s
       retries: 10
-      start_period: 5s
 
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
+    image: cansinerdi/rsm-backend:latest
     environment:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: user
       DB_PASSWORD: password
       DB_NAME: stockdb
-      PORT: 5000
+      PORT: 5050
     depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - "5000:5000"
+      - db
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == backend
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:5050/health"]
       interval: 10s
       retries: 3
 
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
+    image: cansinerdi/rsm-frontend:latest
     ports:
       - "8080:80"
     depends_on:
       - backend
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == frontend
+
+volumes:
+  db_data:
