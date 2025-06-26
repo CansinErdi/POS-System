@@ -19,7 +19,7 @@ services:
       timeout: 5s
       retries: 10
 
-  backend:
+  bbackend:
     image: cansinerdi/rsm-backend:latest
     environment:
       DB_HOST: db
@@ -31,6 +31,9 @@ services:
     depends_on:
       - db
     deploy:
+      resources:
+        limits:
+          memory: 512M
       placement:
         constraints:
           - node.labels.role == backend
@@ -38,7 +41,6 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:5050/health"]
       interval: 10s
       retries: 3
-
   frontend:
     image: cansinerdi/rsm-frontend:latest
     ports:

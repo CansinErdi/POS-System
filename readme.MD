@@ -1,29 +1,79 @@
-reflection
+# POS-System (Restaurant Sales Manager)
 
-i worked alone on this project because i'm doing it at my own pace. it was important for me to go through everything step by step and make something solid. i’m not planning to share this with classmates, it’s just for the teacher to see my work and how i approached the task.
+Dies ist ein webbasiertes Point-of-Sale (POS)-System für Restaurants. Ziel des Projekts ist es, eine moderne, benutzerfreundliche Webanwendung zu entwickeln, mit der Bestellungen aufgenommen, verwaltet und abgerechnet werden können.
 
-during the project i focused on making the app more stable and ready for real use. i tested what happens when the database goes down or when bad data gets sent to the backend. i used docker to stop and start the db container and watched how the backend behaved. i also tested things like missing input fields or broken routes to see how the system reacts. that helped me fix weak points early.
+## Tech-Stack
 
-backend error handling example
+- React (mit Vite und TypeScript)
+- Docker und Docker Compose
+- Deployment später auf Microsoft Azure geplant
+- GitHub Actions für CI/CD
+- ESLint und Prettier für Codequalität
+- Geplant: Datenbankanbindung (z. B. PostgreSQL oder Supabase)
 
-in my backend i have a health route that checks if the database is reachable. if it’s not, the server doesn’t crash, it just responds with a 500 error. that way the frontend gets a clear signal something is wrong without breaking the whole app. i also added console logs to help see when this happens. returning proper status codes is important so everything stays in control.
+## Projektziele
 
-frontend error handling
+Das System soll folgende Module beinhalten:
 
-on the frontend i made sure that if something goes wrong, like the backend being offline or sending back errors, the user still sees a clear message. i show something like “something went wrong, try again later” instead of letting the app go blank or freeze. that way the user knows it's not their fault and they can just wait or reload later.
+- Kellner-Oberfläche: Bestellungen aufnehmen, Tische verwalten
+- Küchenansicht: Übersicht über offene Bestellungen
+- Adminbereich: Produkte und Preise verwalten, Statistiken einsehen
+- Zahlungsmodul: Unterstützung verschiedener Zahlungsarten
 
-healthchecks
+Ziel ist ein stabiles, containerisiertes System, das cloudfähig ist und mit modernen DevOps-Praktiken entwickelt wird.
 
-i added healthchecks in docker-compose for both db and backend. the db check uses pg_isready to see if postgres is up, and the backend calls its own /health route. that makes sure docker knows when a service is actually ready, not just running. it's more reliable than just checking if the process is alive.
+## Lokales Setup
 
-logging
+### Voraussetzungen
 
-i used console.log and console.error to keep track of what’s going on during errors. one helpful message was when i got “connect ECONNREFUSED” from the backend when the db was offline. that showed me the backend tried to connect too early. thanks to that i added depends_on and waited for the db to be healthy before starting the backend.
+- Node.js (empfohlen: v20.x)
+- Docker und Docker Compose
 
-why this matters
+### Entwicklung starten
 
-apps that just crash when something is wrong can’t be used in production. if you want to deploy with something like kubernetes, it needs to know which services are ready and which aren’t. healthchecks and proper error handling are super important to keep things running. good logs also help a lot when fixing bugs or finding the problem fast.
+```bash
+git clone https://github.com/CansinErdi/POS-System
+cd rsm_docker
+npm install
+npm run dev
 
-clean code and structure
+### Docker Build & Start
 
-i removed unused files and made sure my folders were clean and only had what i needed. that helped me a lot when working alone because i didn’t get confused or distracted by stuff that wasn’t part of the project. clean code is just easier to work with and makes debugging way less painful.
+docker build -t pos-system .
+docker run -p 3000:3000 pos-system
+
+### Geplant
+
+docker-compose up
+
+
+Sprint 1
+
+Sprint Goal:
+Ein funktionales Grundgerüst für das POS-System inklusive Projektstruktur, CI/CD-Basis und einer ersten Seite im Browser sichtbar.
+
+Projekt-Board: Sprint 1 auf GitHub Projects
+
+PBIs (Product Backlog Items)
+	1.	Projektstruktur und Setup
+	2.	CI/CD einrichten
+	3.	Startseite anzeigen
+
+Beispielhafte Task-Zerlegung
+
+Projektstruktur und Setup
+	•	Vite + React + TypeScript Projekt initialisieren
+	•	ESLint und Prettier konfigurieren
+	•	Dockerfile schreiben
+	•	Routing mit react-router-dom einbauen
+	•	App.tsx Struktur aufbauen
+
+CI/CD einrichten
+	•	GitHub Actions Workflow erstellen
+	•	Automatischer Build bei jedem Push
+	•	Fehlerausgabe im Build-Prozess
+
+Startseite anzeigen
+	•	Dummy-Startseite anzeigen
+	•	Route /home konfigurieren
+	•	Layout mit einfachem CSS
