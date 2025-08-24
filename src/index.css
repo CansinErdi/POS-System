@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* App base */
+:root {
+  color-scheme: light dark;
+}
+body {
+  @apply bg-gray-50 text-gray-900;
+}
+
+/* ---- modal layering helpers (critical) ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;            /* below the panel */
+}
+
+.modal-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 50;            /* above the overlay */
+  pointer-events: none;   /* only direct children handle clicks */
+}
+.modal-panel > * {
+  pointer-events: auto;
+}
+
+/* TEMP safety net while refactoring (remove later if you want) */
+#root { opacity: 1 !important; }

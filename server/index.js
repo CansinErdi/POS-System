@@ -1,12 +1,13 @@
-import express from 'express';
-import pg from 'pg';
-import dotenv from 'dotenv';
+import express from "express";
+import pg from "pg";
+import dotenv from "dotenv";
+import menuItemsRouter from "./routes/menuItems.js";
 
 dotenv.config();
 
 const { Pool } = pg;
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 const pool = new Pool({
   host: process.env.DB_HOST,
@@ -18,19 +19,33 @@ const pool = new Pool({
 
 app.use(express.json());
 
-app.get('/health', async (req, res) => {
+app.get("/health", async (req, res) => {
   try {
-    await pool.query('SELECT 1');
-    res.send('OK');
+    await pool.query("SELECT 1");
+    res.send("OK");
   } catch (err) {
-    res.status(500).send('Database unreachable');
+    res.status(500).send("Database unreachable");
   }
 });
 
-app.get('/', (req, res) => {
-  res.send('Backend läuft');
+app.get("/", (req, res) => {
+  res.send("Backend läuft");
 });
 
-app.listen(port, () => {
+// Menü-API einbinden
+app.use("/api/menu", menuItemsRouter(pool));
+
+const server = app.listen(port, () => {
   console.log(`Server läuft auf Port ${port}`);
+});
+
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.error(
+      `Port ${port} ist bereits belegt. Bitte beende den anderen Prozess oder wähle einen anderen Port.`
+    );
+    process.exit(1);
+  } else {
+    throw err;
+  }
 });

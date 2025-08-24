@@ -234,148 +234,132 @@ const Ingredients: React.FC = () => {
       </div>
 
       {/* Modal */}
-{/* Modal */}
-<AnimatePresence>
-  {isModalOpen && (
-    <>
-      {/* Overlay (below the panel, click outside to close) */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="modal-overlay bg-black/50"
-        onClick={handleCloseModal}
-        aria-hidden="true"
-      />
-
-      {/* Panel wrapper (above overlay; children are clickable) */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="modal-panel flex items-start md:items-center justify-center p-4"
-      >
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.95, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          className="w-full max-w-lg rounded-2xl bg-white text-left overflow-hidden shadow-xl ring-1 ring-black/5"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div className="sm:flex sm:items-start">
-              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    {currentIngredient ? 'Edit Ingredient' : 'Add New Ingredient'}
-                  </h3>
-                  <button
-                    onClick={handleCloseModal}
-                    className="text-gray-400 hover:text-gray-500 rounded-md px-2 py-1"
-                    aria-label="Close"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-4">
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-                      Quantity
-                    </label>
-                    <input
-                      type="number"
-                      id="quantity"
-                      name="quantity"
-                      value={formData.quantity}
-                      onChange={handleInputChange}
-                      step="0.01"
-                      min="0"
-                      required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <label htmlFor="unit" className="block text-sm font-medium text-gray-700">
-                      Unit
-                    </label>
-                    <select
-                      id="unit"
-                      name="unit"
-                      value={formData.unit}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
-                    >
-                      <option value="">Select a unit</option>
-                      <option value="kg">Kilograms (kg)</option>
-                      <option value="g">Grams (g)</option>
-                      <option value="L">Liters (L)</option>
-                      <option value="ml">Milliliters (ml)</option>
-                      <option value="pcs">Pieces (pcs)</option>
-                    </select>
-                  </div>
-
-                  <div className="mb-4">
-                    <label htmlFor="threshold" className="block text-sm font-medium text-gray-700">
-                      Low Stock Threshold
-                    </label>
-                    <input
-                      type="number"
-                      id="threshold"
-                      name="threshold"
-                      value={formData.threshold}
-                      onChange={handleInputChange}
-                      step="0.01"
-                      min="0"
-                      required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
-                    />
-                  </div>
-
-                  <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                    <button
-                      type="submit"
-                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    >
-                      {currentIngredient ? 'Update' : 'Add'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleCloseModal}
-                      className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 overflow-y-auto"
+          >
+            <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+              <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
               </div>
+
+              <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+              >
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="sm:flex sm:items-start">
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                          {currentIngredient ? 'Edit Ingredient' : 'Add New Ingredient'}
+                        </h3>
+                        <button
+                          onClick={handleCloseModal}
+                          className="text-gray-400 hover:text-gray-500"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      </div>
+                      <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                            Name
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            required
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
+                            Quantity
+                          </label>
+                          <input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            value={formData.quantity}
+                            onChange={handleInputChange}
+                            step="0.01"
+                            min="0"
+                            required
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <label htmlFor="unit" className="block text-sm font-medium text-gray-700">
+                            Unit
+                          </label>
+                          <select
+                            id="unit"
+                            name="unit"
+                            value={formData.unit}
+                            onChange={handleInputChange}
+                            required
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
+                          >
+                            <option value="">Select a unit</option>
+                            <option value="kg">Kilograms (kg)</option>
+                            <option value="g">Grams (g)</option>
+                            <option value="L">Liters (L)</option>
+                            <option value="ml">Milliliters (ml)</option>
+                            <option value="pcs">Pieces (pcs)</option>
+                          </select>
+                        </div>
+                        <div className="mb-4">
+                          <label htmlFor="threshold" className="block text-sm font-medium text-gray-700">
+                            Low Stock Threshold
+                          </label>
+                          <input
+                            type="number"
+                            id="threshold"
+                            name="threshold"
+                            value={formData.threshold}
+                            onChange={handleInputChange}
+                            step="0.01"
+                            min="0"
+                            required
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
+                          />
+                        </div>
+                        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                          <button
+                            type="submit"
+                            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
+                          >
+                            {currentIngredient ? 'Update' : 'Add'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleCloseModal}
+                            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </>
-  )}
-</AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

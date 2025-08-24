@@ -329,141 +329,136 @@ const MenuItems: React.FC = () => {
       {/* Modal */}
       <AnimatePresence>
         {isModalOpen && (
-          <>
-            {/* Overlay (below the panel) */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="modal-overlay bg-black/50"
-              onClick={handleCloseModal}
-            />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 overflow-y-auto"
+          >
+            <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+              <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+              </div>
 
-            {/* Panel wrapper (above overlay, handles layout) */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="modal-panel flex items-start md:items-center justify-center p-4"
-            >
+              <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
               <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
+                initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                className="w-full max-w-lg rounded-2xl bg-white text-left shadow-xl ring-1 ring-black/5"
-                role="dialog"
-                aria-modal="true"
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
               >
-                <div className="px-5 py-4 border-b flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">
-                    {currentMenuItem ? 'Edit Menu Item' : 'Add New Menu Item'}
-                  </h3>
-                  <button
-                    onClick={handleCloseModal}
-                    className="rounded-md px-2 py-1 text-gray-500 hover:bg-gray-100"
-                    aria-label="Close"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-
-                <div className="p-5">
-                  <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                        Menu Item Name
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
-                      />
-                    </div>
-
-                    <div className="mb-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                          Ingredients
-                        </label>
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="sm:flex sm:items-start">
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                          {currentMenuItem ? 'Edit Menu Item' : 'Add New Menu Item'}
+                        </h3>
                         <button
-                          type="button"
-                          onClick={addIngredientField}
-                          className="text-primary-600 hover:text-primary-700 text-sm"
+                          onClick={handleCloseModal}
+                          className="text-gray-400 hover:text-gray-500"
                         >
-                          + Add Ingredient
+                          <X className="h-5 w-5" />
                         </button>
                       </div>
-
-                      {formData.ingredients.map((ingredient, index) => (
-                        <div key={index} className="flex space-x-2 mb-2">
-                          <select
-                            value={ingredient.ingredientId}
-                            onChange={(e) => handleIngredientChange(index, 'ingredientId', e.target.value)}
+                      <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                            Menu Item Name
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
                             required
-                            className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
-                          >
-                            <option value="">Select Ingredient</option>
-                            {ingredients.map(ing => (
-                              <option key={ing.id} value={ing.id}>
-                                {ing.name} ({ing.quantity} {ing.unit} available)
-                              </option>
-                            ))}
-                          </select>
-                          <div className="flex flex-col">
-                            <div className="flex items-center space-x-2">
-                              <input
-                                type="number"
-                                value={ingredient.quantity}
-                                onChange={(e) => handleIngredientChange(index, 'quantity', e.target.value)}
-                                min="0.01"
-                                step="0.01"
-                                required
-                                className="w-20 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
-                              />
-                              {ingredient.ingredientId && (
-                                <span className="text-gray-500 text-sm">
-                                  {getIngredientUnit(ingredient.ingredientId)}
-                                </span>
-                              )}
-                            </div>
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
+                          />
+                        </div>
+                        
+                        <div className="mb-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <label className="block text-sm font-medium text-gray-700">
+                              Ingredients
+                            </label>
+                            <button
+                              type="button"
+                              onClick={addIngredientField}
+                              className="text-primary-600 hover:text-primary-700 text-sm"
+                            >
+                              + Add Ingredient
+                            </button>
                           </div>
+                          
+                          {formData.ingredients.map((ingredient, index) => (
+                            <div key={index} className="flex space-x-2 mb-2">
+                              <select
+                                value={ingredient.ingredientId}
+                                onChange={(e) => handleIngredientChange(index, 'ingredientId', e.target.value)}
+                                required
+                                className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
+                              >
+                                <option value="">Select Ingredient</option>
+                                {ingredients.map(ing => (
+                                  <option key={ing.id} value={ing.id}>
+                                    {ing.name} ({ing.quantity} {ing.unit} available)
+                                  </option>
+                                ))}
+                              </select>
+                              <div className="flex flex-col">
+                                <div className="flex items-center space-x-2">
+                                  <input
+                                    type="number"
+                                    value={ingredient.quantity}
+                                    onChange={(e) => handleIngredientChange(index, 'quantity', e.target.value)}
+                                    min="0.01"
+                                    step="0.01"
+                                    required
+                                    className="w-20 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 border p-2"
+                                  />
+                                  {ingredient.ingredientId && (
+                                    <span className="text-gray-500 text-sm">
+                                      {getIngredientUnit(ingredient.ingredientId)}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => removeIngredientField(index)}
+                                className="text-red-500 hover:text-red-700 p-2"
+                                disabled={formData.ingredients.length === 1}
+                              >
+                                <X className="h-5 w-5" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                          <button
+                            type="submit"
+                            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
+                          >
+                            {currentMenuItem ? 'Update' : 'Add'}
+                          </button>
                           <button
                             type="button"
-                            onClick={() => removeIngredientField(index)}
-                            className="text-red-500 hover:text-red-700 p-2"
-                            disabled={formData.ingredients.length === 1}
+                            onClick={handleCloseModal}
+                            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm"
                           >
-                            <X className="h-5 w-5" />
+                            Cancel
                           </button>
                         </div>
-                      ))}
+                      </form>
                     </div>
-
-                    <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                      <button
-                        type="submit"
-                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
-                      >
-                        {currentMenuItem ? 'Update' : 'Add'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleCloseModal}
-                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
+                  </div>
                 </div>
               </motion.div>
-            </motion.div>
-          </>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

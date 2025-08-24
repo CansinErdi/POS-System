@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  priceCents  Int
+  sku         String?   @unique
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model DiningTable {
+  id        Int       @id @default(autoincrement())
+  label     String    @unique
+  orders    Order[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Order {
+  id          Int          @id @default(autoincrement())
+  tableId     Int?
+  table       DiningTable? @relation(fields: [tableId], references: [id])
+  status      OrderStatus  @default(OPEN)
+  items       OrderItem[]
+  payments    Payment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model OrderItem {
+  id         Int     @id @default(autoincrement())
+  orderId    Int
+  order      Order   @relation(fields: [orderId], references: [id])
+  productId  Int
+  product    Product @relation(fields: [productId], references: [id])
+  qty        Int
+  priceCents Int
+}
+
+model Payment {
+  id          Int          @id @default(autoincrement())
+  orderId     Int
+  order       Order        @relation(fields: [orderId], references: [id])
+  amountCents Int
+  method      PaymentMethod
+  createdAt   DateTime     @default(now())
+}
+
+enum OrderStatus {
+  OPEN
+  PAID
+  CANCELED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+}

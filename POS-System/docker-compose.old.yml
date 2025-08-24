@@ -1,25 +1,26 @@
+version: "3.8"
+
 services:
   db:
-    image: postgres:16
-    container_name: pos_db
-    ports:
-      - "55432:5432"
+    image: cansinerdi/stock-db:latest
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: stockdb
     volumes:
       - db_data:/var/lib/postgresql/data
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d stockdb"]
       interval: 10s
       timeout: 5s
       retries: 10
-    restart: unless-stopped
 
-  backend:
+  bbackend:
     image: cansinerdi/rsm-backend:latest
-    container_name: pos_backend
     environment:
       DB_HOST: db
       DB_PORT: 5432
@@ -28,20 +29,28 @@ services:
       DB_NAME: stockdb
       PORT: 5050
     depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - "5050:5050"
-    restart: unless-stopped
-
+      - db
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+      placement:
+        constraints:
+          - node.labels.role == backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5050/health"]
+      interval: 10s
+      retries: 3
   frontend:
     image: cansinerdi/rsm-frontend:latest
-    container_name: pos_frontend
-    depends_on:
-      - backend
     ports:
       - "8080:80"
-    restart: unless-stopped
+    depends_on:
+      - backend
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == frontend
 
 volumes:
   db_data:

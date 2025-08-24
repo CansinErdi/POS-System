@@ -1,4 +1,3 @@
-import { getHealth, getProducts, createOrder, type Product } from "./api";
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -19,7 +18,6 @@ function App() {
         <Routes>
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="home" element={<Dashboard />} />
             <Route path="ingredients" element={<Ingredients />} />
             <Route path="menu-items" element={<MenuItems />} />
             <Route path="reports" element={<Reports />} />

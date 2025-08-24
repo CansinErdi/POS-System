@@ -26,8 +26,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, setIsOpen }) => {
           transition={{ type: 'spring', damping: 25 }}
           className="fixed inset-0 z-50 md:hidden"
         >
-          <div className="modal-overlay bg-black/50" onClick={() => setIsOpen(false)}></div>
-          <div className="fixed z-50 inset-y-0 left-0 w-64 bg-white p-4" role="dialog" aria-modal="true">
+          <div className="absolute inset-0 bg-gray-800 opacity-50" onClick={() => setIsOpen(false)}></div>
+          <div className="absolute inset-y-0 left-0 w-64 bg-white p-4">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-display font-bold text-gray-800">Menu</h2>
               <button onClick={() => setIsOpen(false)} className="p-1 rounded-md text-gray-700 hover:text-gray-900">

@@ -1,0 +1,26 @@
+### Alle Menü-Artikel abrufen
+GET http://localhost:5000/api/menu
+
+### Neuen Menü-Artikel anlegen
+POST http://localhost:5000/api/menu
+Content-Type: application/json
+
+{
+  "name": "Pizza Margherita",
+  "price": 8.50
+}
+
+### Einzelnen Menü-Artikel abrufen (ID anpassen)
+GET http://localhost:5000/api/menu/1
+
+### Menü-Artikel aktualisieren (ID anpassen)
+PUT http://localhost:5000/api/menu/1
+Content-Type: application/json
+
+{
+  "name": "Pizza Salami",
+  "price": 9.50
+}
+
+### Menü-Artikel löschen (ID anpassen)
+DELETE http://localhost:5000/api/menu/1
